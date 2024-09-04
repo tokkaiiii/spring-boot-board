@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title> Spring Board </title>
+  <meta charset="utf-8">
+  <style>
+    a {
+      text-decoration: none
+    }
+
+    .pagination {
+      display: flex;
+      justify-content: center;
+      list-style-type: none;
+      padding: 0;
+    }
+
+    .pagination li {
+      margin: 0 5px;
+    }
+
+    .pagination a {
+      text-decoration: none;
+      padding: 5px 10px;
+      border: 1px solid #ddd;
+      border-radius: 3px;
+    }
+
+    .pagination a.disabled {
+      color: #aaa;
+      border: 1px solid #ddd;
+    }
+    .current{
+      color: black;
+    }
+  </style>
+</head>
+<body>
+<center>
+  <font color='gray' size='4' face='휴먼편지체'>
+    <hr width='600' size='2' color='gray' noshade>
+    <h3> Spring Board(JPA)</h3>
+    <font color='gray' size='4' face='휴먼편지체'>
+      <a href='../'>인덱스</a>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      <a
+          href='write.do'
+          th:href="@{/boards/write}"
+      >글쓰기</a><br/>
+    </font>
+    <hr width='600' size='2' color='gray' noshade>
+    <form th:action="@{/boards/search}" th:method="get" th:object="${searchForm}">
+      <input th:field="*{subject}">
+      <button type="submit">검색</button>
+
+      <TABLE border='2' width='600' align='center' noshade>
+        <TR size='2' align='center' noshade bgcolor='AliceBlue'>
+          <th bgcolor='AliceBlue'>no</th>
+          <th color='gray'>writer</th>
+          <th color='gray'>e-mail</th>
+          <th color='gray'>subject</th>
+          <th color='gray'>date</th>
+        </TR>
+
+
+        <TR align='center' noshade th:each="board :${boardList.content}">
+          <TD th:text="${board.id}">17</TD>
+          <TD th:text="${board.writer}">가</TD>
+          <TD th:text="${board.email}">나</TD>
+          <TD>
+            <a href="content.do?seq=17"
+               th:href="@{/boards/{id}(id=${board.id})}"
+               th:text="${board.subject}"
+            >
+              다
+            </a>
+          </TD>
+          <TD th:text="${board.date}">2018-12-14</TD>
+        </TR>
+
+      </TABLE>
+      <hr width='600' size='2' color='gray' noshade>
+      <font color='gray' size='3' face='휴먼편지체'>
+        <div>
+          <ul class="pagination">
+            <!-- Previous Page Link -->
+            <li>
+              <a th:href="@{/boards/search(page=${boardList.number - 1}, size=${boardList.size},subject=*{subject})}"
+                 th:classappend="${boardList.hasPrevious()} ? '' : 'disabled'"
+                 th:if="${boardList.hasPrevious()}">Previous</a>
+            </li>
+
+
+
+            <!-- Page Number Links -->
+            <li th:each="pageNum : ${#numbers.sequence(boardList.number - 2, boardList.number + 2)}"
+                th:if="${pageNum>=0}">
+              <a th:if="${(pageNum+1)<=boardList.totalPages}"
+                  th:href="@{/boards/search(page=${pageNum}, size=${boardList.size},subject=*{subject})}"
+                 th:text="${pageNum + 1}"
+                 th:classappend="${pageNum == boardList.number ? 'current' : ''}"></a>
+            </li>
+
+            <!-- Next Page Link -->
+            <li>
+              <a th:href="@{/boards/search(page=${boardList.number + 1}, size=${boardList.size},subject=*{subject})}"
+                 th:classappend="${boardList.hasNext()} ? '' : 'disabled'"
+                 th:if="${boardList.hasNext()}">Next</a>
+            </li>
+          </ul>
+    </form>
+    </div>
+
+    <script language="javascript">
+      function f(select) {
+        //var el = document.getElementById("psId");
+        var ps = select.value;
+        //alert("ps : " + ps);
+        location.href = "list.do?ps=" + ps;
+      }
+    </script>
+
+  </font>
+  <hr width='600' size='2' color='gray' noshade>
+  <!--
+  <form action="">
+        <select name="catgo">
+          <option value="subject">제목</option>
+          <option value="writer">글쓴이</option>
+          <option value="content">내용</option>
+        </select>
+        <input type="text" name="keyword" size="40" required="required" /> <button>검색</button>
+      </form>
+  -->
+</center>
+</body>
+</html>

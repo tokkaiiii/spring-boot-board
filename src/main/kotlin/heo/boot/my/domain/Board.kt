@@ -1,7 +1,9 @@
 package heo.boot.my.domain
 
 import jakarta.persistence.*
+import org.hibernate.annotations.CreationTimestamp
 import java.time.Instant
+import java.time.LocalDateTime
 import java.util.*
 
 @Entity
@@ -19,5 +21,21 @@ open class Board(
 
     var content: String? = null,
 
-    var date: Date? = Date.from(Instant.now())
-)
+    @CreationTimestamp
+    var date: LocalDateTime? = LocalDateTime.now()
+) {
+
+    companion object {
+
+        fun changeBoard(
+            board: Board,
+            email: String,
+            subject: String,
+            content: String
+        ) {
+            board.email = email
+            board.subject = subject
+            board.content = content
+        }
+    }
+}

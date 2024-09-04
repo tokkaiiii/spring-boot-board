@@ -2,43 +2,37 @@ package heo.boot.my.service
 
 import heo.boot.my.controller.SearchForm
 import heo.boot.my.domain.Board
-import heo.boot.my.repository.BoardRepository
+import heo.boot.my.repository.SpringDataJpaBoardRepository
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
-//@Service
-@Transactional(readOnly = true)
-class BoardServiceImpl(private val boardRepository: BoardRepository) : BoardService {
-
-    @Transactional
+@Service
+@Transactional
+class SpringDataBoardService(private val jpaRepository: SpringDataJpaBoardRepository): BoardService {
     override fun save(board: Board) {
-        boardRepository.save(board)
+        jpaRepository.save(board)
     }
 
     override fun findOne(id: Long): Board {
-        return boardRepository.findOne(id)
+       return jpaRepository.findBoardById(id)
     }
 
     override fun findAll(pageable: Pageable): Page<Board> {
-        return boardRepository.findAll(pageable)
+        return jpaRepository.findAllByOrderByIdDesc(pageable)
     }
 
     override fun findAllBySubject(pageable: Pageable, searchForm: SearchForm): Page<Board> {
-       return boardRepository.findAllBySubject(pageable, searchForm)
+        return jpaRepository.findAllBySubjectContainingOrderByIdDesc(pageable,searchForm.subject?:null)
     }
 
-    @Transactional
     override fun update(boardId: Long, email: String, subject: String, content: String) {
-        val findBoard = boardRepository.findOne(boardId)
+        val findBoard = jpaRepository.findBoardById(boardId)
         Board.changeBoard(findBoard, email, subject, content)
     }
 
-
-    @Transactional
     override fun delete(boardId: Long) {
-        val findOne = boardRepository.findOne(boardId)
-        boardRepository.delete(findOne)
+        jpaRepository.deleteBoardById(boardId)
     }
 }

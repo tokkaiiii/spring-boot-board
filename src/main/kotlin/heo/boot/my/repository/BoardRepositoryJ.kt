@@ -1,5 +1,6 @@
 package heo.boot.my.repository
 
+import heo.boot.my.controller.SearchForm
 import heo.boot.my.domain.Board
 import jakarta.persistence.EntityManager
 import jakarta.persistence.PersistenceContext
@@ -8,7 +9,7 @@ import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Repository
 
-@Repository
+//@Repository
 class BoardRepositoryJ(@PersistenceContext private val em: EntityManager) : BoardRepository {
 
     override fun save(board: Board) {
@@ -30,15 +31,22 @@ class BoardRepositoryJ(@PersistenceContext private val em: EntityManager) : Boar
         return PageImpl(boards, pageable, total)
     }
 
-
-    override fun update(board: Board) {
-        em.merge(board)
+    override fun findAllBySubject(pageable: Pageable, searchForm: SearchForm): Page<Board> {
+        val resultList =
+            em.createQuery("select b from Board b where b.subject = :subject", Board::class.java)
+                .setParameter("subject", searchForm.subject)
+                .setFirstResult(pageable.offset.toInt())
+                .setMaxResults(pageable.pageSize)
+                .resultList
+        val total = em.createQuery("select count(b) from Board b where b.subject like :subject", Long::class.java)
+            .setParameter("subject", searchForm.subject)
+            .singleResult
+        return PageImpl(resultList, pageable, total)
     }
 
-    override fun deleteById(id: Long) {
-        em.createQuery("delete from Board b where id=:id")
-            .setParameter("id", id)
-            .executeUpdate()
+
+    override fun delete(board: Board) {
+        em.remove(board)
     }
 
 }
