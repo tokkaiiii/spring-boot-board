@@ -19,5 +19,4 @@ interface BoardService {
 
     fun delete(boardId: Long)
 
-
 }

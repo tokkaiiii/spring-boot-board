@@ -2,9 +2,7 @@ package heo.boot.my.domain
 
 import jakarta.persistence.*
 import org.hibernate.annotations.CreationTimestamp
-import java.time.Instant
 import java.time.LocalDateTime
-import java.util.*
 
 @Entity
 open class Board(

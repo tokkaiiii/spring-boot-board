@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>파일 리스팅</title>
+</head>
+<body>
+<center>
+  <h3>파일 리스트</h3>
+  <h4>이미지 출력</h4>
+  <table>
+    <thead>
+    <tr>
+      <td>#</td>
+      <td>파일명</td>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="file : ${files}">
+      <td th:text="${file.id}"></td>
+      <td  ><a th:href="@{/file/download/{id}(id=${file.id})}" th:text="${file.orgnm}"></a></td>
+    </tr>
+    </tbody>
+  </table>
+
+  <h4>파일 다운로드</h4>
+  <table>
+    <thead>
+    <tr>
+      <td>#</td>
+      <td>파일명</td>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="file : ${files}">
+      <td th:text="${file.id}"></td>
+      <td  ><a th:href="@{/file/download/{id}(id=${file.id})}" th:text="${file.orgnm}"></a></td>
+    </tr>
+    </tbody>
+  </table>
+
+
+</center>
+</body>
+</html>

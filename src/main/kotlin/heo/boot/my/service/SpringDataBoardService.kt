@@ -24,7 +24,7 @@ class SpringDataBoardService(private val jpaRepository: SpringDataJpaBoardReposi
     }
 
     override fun findAllBySubject(pageable: Pageable, searchForm: SearchForm): Page<Board> {
-        return jpaRepository.findAllBySubjectContainingOrderByIdDesc(pageable,searchForm.subject?:null)
+        return jpaRepository.findAllBySubjectContainingOrderByIdDesc(pageable, searchForm.subject)
     }
 
     override fun update(boardId: Long, email: String, subject: String, content: String) {
